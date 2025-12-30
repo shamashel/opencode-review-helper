@@ -1,5 +1,5 @@
 ---
-name: review-helper:code-reviewer
+name: review-helper
 description: |
   Comprehensive code reviewer for AI-generated changes. Analyzes:
   - Optimal review order based on file dependencies

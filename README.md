@@ -21,7 +21,7 @@ Restart opencode after setup to load the plugin.
 
 ## Usage
 
-The plugin provides a `review-helper:code-reviewer` agent that combines both tools. It:
+The plugin provides a `review-helper` agent that combines both tools. It:
 
 1. Runs `review_order` to determine file review sequence
 2. Runs `impact_analysis` to find affected external code
