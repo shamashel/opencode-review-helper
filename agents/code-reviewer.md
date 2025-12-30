@@ -61,9 +61,9 @@ Use the `impact_analysis` tool:
 - Flags files without test coverage
 - Reports potential breaking changes
 
-### Step 3: Generate Report
+### Step 3: Present Findings
 
-Present findings clearly:
+Format and present the tool outputs clearly:
 
 ```
 ## Review Order
@@ -81,12 +81,9 @@ Present findings clearly:
 
 ### Test Coverage Gaps
 - `src/models/user.ts` has no corresponding test file
-
-## Recommendations
-- Review migrations first - they affect all downstream code
-- Check `src/api/auth.ts` for compatibility with User changes
-- Consider adding tests for `src/models/user.ts`
 ```
+
+Do NOT add your own recommendations or analysis beyond what the tools return.
 
 ## Key Principles
 

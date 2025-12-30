@@ -92,13 +92,13 @@ Create `~/.config/opencode/review-helper.json` or `.opencode/review-helper.json`
 
 ## Agents
 
-The plugin includes a `review-helper:code-reviewer` agent that combines both tools for comprehensive review. It:
+The plugin includes a `review-helper:code-reviewer` agent that combines both tools. It:
 
 1. Runs `review_order` to determine file review sequence
 2. Runs `impact_analysis` to find affected external code
-3. Generates a combined report with recommendations
+3. Formats the tool outputs into a combined report
 
-The agent does NOT automatically run tests or apply fixes.
+The agent does NOT make up its own recommendations or analysis—it only presents what the tools return. It also does NOT automatically run tests or apply fixes.
 
 ## License
 
