@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenCode Review Helper Configuration",
+  "type": "object",
+  "properties": {
+    "models": {
+      "type": "object",
+      "properties": {
+        "explorer": {
+          "type": "string",
+          "description": "Model for the impact-explorer sub-agent (e.g., google/gemini-3-flash)",
+          "default": "google/gemini-3-flash"
+        }
+      }
+    },
+    "review_order": {
+      "type": "object",
+      "properties": {
+        "type_priority": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "File type keywords in priority order (highest priority first)",
+          "default": ["migration", "schema", "model", "service", "resolver", "component", "test"]
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Additional ordering instructions for the review agent"
+        }
+      }
+    },
+    "impact_analysis": {
+      "type": "object",
+      "properties": {
+        "max_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3,
+          "default": 2,
+          "description": "Maximum transitive depth for impact analysis"
+        },
+        "max_results_per_level": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 200,
+          "default": 50,
+          "description": "Maximum results per depth level"
+        },
+        "exclude_patterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Glob patterns to exclude from analysis",
+          "default": ["**/*.test.ts", "**/*.spec.ts", "**/__tests__/**"]
+        }
+      }
+    }
+  }
+}

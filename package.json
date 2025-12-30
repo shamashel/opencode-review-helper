@@ -1,0 +1,46 @@
+{
+  "name": "opencode-review-helper",
+  "version": "0.1.0",
+  "description": "OpenCode plugin for reviewing AI-generated code changes - suggests review order and analyzes impact",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "opencode-review-helper": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "agents",
+    "schema.json"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.0.209",
+    "zod": "^4.1.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "opencode",
+    "plugin",
+    "code-review",
+    "ai",
+    "impact-analysis"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shamashel/opencode-review-helper"
+  },
+  "author": "shamashel",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
