@@ -21,11 +21,27 @@ Restart opencode after setup to load the plugin. The plugin uses `@latest` so it
 
 ## Usage
 
-The plugin provides a `review-helper` agent that combines both tools. It:
+### Slash Command: `/review-order`
 
-1. Runs `review_order` to determine file review sequence
-2. Runs `impact_analysis` to find affected external code
-3. Formats the tool outputs into a combined report
+The quickest way to use this plugin:
+
+```
+/review-order
+```
+
+This runs the full workflow:
+1. Analyzes changed files and determines initial review order
+2. Finds external files impacted by the changes
+3. Merges everything into a single prioritized list
+
+Output is a unified table showing all files to review, with changed files first (prioritized by dependencies and impact) followed by external files that may need attention.
+
+### Agent: `review-helper`
+
+The plugin provides a `review-helper` agent that orchestrates two subagents:
+
+- `review-helper:review-order` - Determines optimal file review order
+- `review-helper:impact-explorer` - Finds external code impacted by changes
 
 The agent does NOT make up its own recommendations or analysis—it only presents what the tools return. It also does NOT automatically run tests or apply fixes.
 
@@ -77,10 +93,15 @@ The plugin also exposes two tools directly:
 
 Suggests optimal order to review changed files.
 
+Arguments:
+- `files` (optional): Specific files to analyze. If omitted, uses git diff.
+- `instructions` (optional): Custom ordering instructions
+- `impact_data` (optional): Impact analysis results to merge external files into the list
+
 Output:
 - Prioritized file list with rationale
 - Dependency graph showing import relationships
-- Scores based on: type priority, dependents count, complexity
+- Scores based on: type priority, dependents count, complexity, external impact
 
 ### `impact_analysis`
 

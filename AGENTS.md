@@ -1,10 +1,31 @@
 # Agent Instructions
 
+## Local Testing
+
+To test the plugin locally:
+
+1. Update `~/.config/opencode/opencode.jsonc` to use the local path:
+   ```jsonc
+   "plugin": [
+     "/home/mike/Projects/OpenSource/review-helper",
+     // ... other plugins
+   ]
+   ```
+
+2. Run `yarn build` to compile changes
+
+3. Use the `/review-order` command or run:
+   ```bash
+   opencode run --agent review-helper --model anthropic/claude-sonnet-4-20250514 "/review-order"
+   ```
+
+4. Remember to revert the config to `"opencode-review-helper@latest"` after testing
+
 ## Release Process
 
 1. **Test changes locally**
    - Run `yarn build` to verify compilation
-   - Test manually in OpenCode by restarting after changes
+   - Test manually in OpenCode using `/test-local` command
    - Run unit tests if available
 
 2. **Commit and push changes**
@@ -24,20 +45,24 @@
 
 ### Agent Registration
 
-OpenCode plugins cannot return an `agent` property directly. Agents must be injected via the `config` hook:
+OpenCode plugins cannot return an `agent` property directly. Agents must be injected via the `config` hook in `src/index.ts`.
+
+Agent definitions live in `src/agents/`:
+- `review-helper.ts` - Primary orchestrator agent
+- `review-order.ts` - Subagent for determining file review order
+- `impact-explorer.ts` - Subagent for analyzing external impact
+
+### Slash Commands
+
+Commands are registered via the `config` hook:
 
 ```typescript
-config: async (openCodeConfig) => {
-  openCodeConfig.agent = {
-    ...openCodeConfig.agent,
-    "my-agent": {
-      description: "...",
-      mode: "subagent",
-      prompt: "...",
-      tools: { ... },
-    },
-  };
-}
+openCodeConfig.command = {
+  ...openCodeConfig.command,
+  "review-order": {
+    template: "...",
+    description: "...",
+    agent: "review-helper",
+  },
+};
 ```
-
-The `agents/` directory contains markdown files for reference/documentation only - they are not automatically loaded by OpenCode.
