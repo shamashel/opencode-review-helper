@@ -1,6 +1,6 @@
 {
   "name": "opencode-review-helper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenCode plugin for reviewing AI-generated code changes - suggests review order and analyzes impact",
   "type": "module",
   "main": "dist/index.js",
