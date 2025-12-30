@@ -1,7 +1,14 @@
 #!/usr/bin/env node
 
-import { saveGlobalConfig, loadConfig } from "./config.js";
+import { saveGlobalConfig } from "./config.js";
 import { createInterface } from "node:readline";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { homedir } from "node:os";
+import JSONC from "tiny-jsonc";
+
+const PLUGIN_NAME = "opencode-review-helper";
 
 const MODELS = [
   { value: "google/gemini-3-flash", label: "Google Gemini 3 Flash (fast, recommended)" },
@@ -24,10 +31,64 @@ async function prompt(question: string): Promise<string> {
   });
 }
 
+function getOpencodeConfigPath(): string {
+  const paths = [
+    join(homedir(), ".config", "opencode", "opencode.jsonc"),
+    join(homedir(), ".config", "opencode", "opencode.json"),
+  ];
+
+  for (const p of paths) {
+    if (existsSync(p)) return p;
+  }
+
+  return paths[0];
+}
+
+async function ensurePluginInConfig(): Promise<{ added: boolean; path: string }> {
+  const configPath = getOpencodeConfigPath();
+  const configDir = join(homedir(), ".config", "opencode");
+
+  await mkdir(configDir, { recursive: true });
+
+  let config: Record<string, unknown> = {};
+
+  if (existsSync(configPath)) {
+    const content = await readFile(configPath, "utf-8");
+    try {
+      config = JSONC.parse(content);
+    } catch {
+      console.error(`Warning: Could not parse ${configPath}`);
+      return { added: false, path: configPath };
+    }
+  }
+
+  const plugins = (config.plugin as string[]) || [];
+  const hasPlugin = plugins.some(
+    (p) => p === PLUGIN_NAME || p.startsWith(`${PLUGIN_NAME}@`)
+  );
+
+  if (hasPlugin) {
+    return { added: false, path: configPath };
+  }
+
+  config.plugin = [...plugins, PLUGIN_NAME];
+  await writeFile(configPath, JSON.stringify(config, null, 2) + "\n");
+
+  return { added: true, path: configPath };
+}
+
 async function setup() {
   console.log("\n🔍 OpenCode Review Helper - Setup\n");
 
-  console.log("Select a model for the impact-explorer sub-agent:\n");
+  console.log("Step 1: Configuring opencode.jsonc...\n");
+  const { added, path } = await ensurePluginInConfig();
+  if (added) {
+    console.log(`   ✅ Added plugin to ${path}\n`);
+  } else {
+    console.log(`   ✅ Plugin already configured in ${path}\n`);
+  }
+
+  console.log("Step 2: Select model for impact-explorer sub-agent:\n");
   MODELS.forEach((m, i) => {
     console.log(`  ${i + 1}. ${m.label}`);
   });
@@ -58,12 +119,10 @@ async function setup() {
     },
   });
 
-  console.log(`\n✅ Configuration saved!`);
+  console.log(`\n✅ Setup complete!`);
   console.log(`   Explorer model: ${selectedModel}`);
-  console.log(`   Config location: ~/.config/opencode/review-helper.json\n`);
-
-  console.log("To use the plugin, add to your opencode.jsonc:\n");
-  console.log('  { "plugin": ["opencode-review-helper"] }\n');
+  console.log(`   Plugin config: ~/.config/opencode/review-helper.json`);
+  console.log(`\n   Restart opencode to use the plugin.\n`);
 }
 
 function showHelp() {
@@ -71,11 +130,8 @@ function showHelp() {
 opencode-review-helper - OpenCode plugin for AI code review
 
 Commands:
-  setup    Configure the plugin (model selection)
+  setup    Configure the plugin (adds to opencode.jsonc + model selection)
   help     Show this help message
-
-Usage in opencode.jsonc:
-  { "plugin": ["opencode-review-helper"] }
 
 Tools provided:
   review_order     - Suggests optimal order to review changed files

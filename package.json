@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@opencode-ai/plugin": "^1.0.209",
+    "tiny-jsonc": "^1.0.2",
     "zod": "^4.1.8"
   },
   "devDependencies": {

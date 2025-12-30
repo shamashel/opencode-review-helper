@@ -10,26 +10,14 @@ OpenCode plugin for reviewing AI-generated code changes. Helps humans efficientl
 ## Installation
 
 ```bash
-npm install -g opencode-review-helper
+bunx opencode-review-helper setup
 ```
 
-Then add to your `~/.config/opencode/opencode.jsonc`:
+This will:
+1. Add the plugin to your `~/.config/opencode/opencode.jsonc`
+2. Let you choose which model to use for the impact-explorer sub-agent (default: `google/gemini-3-flash`)
 
-```json
-{
-  "plugin": ["opencode-review-helper"]
-}
-```
-
-## Setup
-
-Configure the sub-agent model (optional):
-
-```bash
-npx opencode-review-helper setup
-```
-
-This lets you choose which model to use for the impact-explorer sub-agent (default: `google/gemini-3-flash`).
+Restart opencode after setup to load the plugin.
 
 ## Usage
 
