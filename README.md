@@ -21,6 +21,8 @@ Restart opencode after setup to load the plugin. The plugin uses `@latest` so it
 
 ## Usage
 
+**Direct Slash Command Use**
+
 ```
 /review-order
 ```
@@ -31,6 +33,48 @@ This runs the full workflow:
 3. Merges everything into a single prioritized list
 
 Output is a unified table showing all files to review, with changed files first (prioritized by dependencies and impact) followed by external files that may need attention.
+
+**Agent Use**
+
+```
+# Tab twice to go to Review-Helper mode
+Take a look at everything since the 0.2.0 release as if it were a single PR. Guide me through how to review it.
+```
+
+Output:
+```
+Review Order for v0.2.0 → HEAD
+| # | File | Reason | Score |
+|---|------|--------|-------|
+| 1 | src/tools/review-order.ts | Core scoring/sorting logic; foundation for all agents | 80 |
+| 2 | src/agents/review-order.ts | Sub-agent wrapping review_order tool | 70 |
+| 3 | src/agents/impact-explorer.ts | Sub-agent wrapping impact_analysis tool | 70 |
+| 4 | src/agents/review-helper.ts | Orchestrator coordinating sub-agents | 60 |
+| 5 | src/agents/index.ts | Barrel export for agent definitions | 50 |
+| 6 | src/index.ts | Plugin entry point; command registration | 40 |
+| 7 | package.json | Version bump 0.2.0 → 0.3.0 | 30 |
+| 8 | AGENTS.md | Local testing/release docs | 20 |
+| 9 | README.md | User-facing docs reorganization | 10 |
+| 10 | agents/*.md (deleted) | Removed markdown agent files | 5 |
+---
+Summary of Changes
+Theme: Subagent architecture for /review-order slash command
+Structural Changes
+- Added: src/agents/ directory with 4 new files
+- Deleted: agents/*.md files (agent prompts moved to TypeScript)
+- Refactored: src/index.ts significantly simplified (136 lines → ~30 lines of logic)
+Key Review Points
+| File | What to Check |
+|------|---------------|
+| src/tools/review-order.ts | +139 lines. New scoring algorithm? Dependency detection? |
+| src/agents/review-helper.ts | Orchestration flow: review-order → impact → merge |
+| src/index.ts | Verify plugin registration still works after major trim |
+| agents/*.md deletion | Confirm prompts weren't lost, just moved to .ts |
+Testing Gaps
+⚠️ No test files for any changed code. Manual testing via /review-order command required.
+---
+Want me to read specific files for deeper analysis?
+```
 
 ## Agents
 
