@@ -17,7 +17,7 @@ This will:
 1. Add the plugin to your `~/.config/opencode/opencode.jsonc`
 2. Let you choose which model to use for the impact-explorer sub-agent (default: `google/gemini-3-flash`)
 
-Restart opencode after setup to load the plugin.
+Restart opencode after setup to load the plugin. The plugin uses `@latest` so it will auto-update when you restart OpenCode.
 
 ## Usage
 

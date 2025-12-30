@@ -71,7 +71,7 @@ async function ensurePluginInConfig(): Promise<{ added: boolean; path: string }>
     return { added: false, path: configPath };
   }
 
-  config.plugin = [...plugins, PLUGIN_NAME];
+  config.plugin = [...plugins, `${PLUGIN_NAME}@latest`];
   await writeFile(configPath, JSON.stringify(config, null, 2) + "\n");
 
   return { added: true, path: configPath };
