@@ -21,10 +21,6 @@ Restart opencode after setup to load the plugin. The plugin uses `@latest` so it
 
 ## Usage
 
-### Slash Command: `/review-order`
-
-The quickest way to use this plugin:
-
 ```
 /review-order
 ```
@@ -36,14 +32,29 @@ This runs the full workflow:
 
 Output is a unified table showing all files to review, with changed files first (prioritized by dependencies and impact) followed by external files that may need attention.
 
-### Agent: `review-helper`
+## Agents
 
-The plugin provides a `review-helper` agent that orchestrates two subagents:
+Three agents available for direct use or extension:
 
-- `review-helper:review-order` - Determines optimal file review order
-- `review-helper:impact-explorer` - Finds external code impacted by changes
+| Agent | Purpose |
+|-------|---------|
+| `review-helper` | Orchestrator - runs full `/review-order` workflow |
+| `review-helper:review-order` | Determines optimal file review order |
+| `review-helper:impact-explorer` | Finds external impacted code |
 
-The agent does NOT make up its own recommendations or analysis—it only presents what the tools return. It also does NOT automatically run tests or apply fixes.
+The orchestrator does NOT make up its own recommendations—it only presents what the subagents return. It also does NOT automatically run tests or apply fixes.
+
+### Examples
+
+Run impact analysis only:
+```bash
+opencode run --agent review-helper:impact-explorer "Analyze impact of current changes"
+```
+
+Get review order without impact merge:
+```bash
+opencode run --agent review-helper:review-order "Get review order for changed files"
+```
 
 ## Configuration
 
@@ -57,12 +68,10 @@ Create `~/.config/opencode/review-helper.json` or `.opencode/review-helper.json`
   "review_order": {
     "type_priority": [
       "migration",
-      "schema", 
+      "schema",
       "model",
       "service",
-      "resolver",
-      "component",
-      "test"
+      "..."
     ],
     "instructions": "Always review database changes before business logic"
   },
@@ -74,43 +83,18 @@ Create `~/.config/opencode/review-helper.json` or `.opencode/review-helper.json`
 }
 ```
 
+*Default `type_priority` includes 18 keywords. See [src/config.ts](src/config.ts) for full list.*
+
 ### Configuration Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
 | `models.explorer` | Model for sub-agent exploration | `google/gemini-3-flash` |
-| `review_order.type_priority` | File type keywords in priority order | See above |
+| `review_order.type_priority` | File type keywords in priority order | See config.ts |
 | `review_order.instructions` | Custom ordering instructions | - |
 | `impact_analysis.max_depth` | Transitive analysis depth (1-3) | `2` |
 | `impact_analysis.max_results_per_level` | Max results per category | `50` |
 | `impact_analysis.exclude_patterns` | Glob patterns to skip | Test files |
-
-## Tools
-
-The plugin also exposes two tools directly:
-
-### `review_order`
-
-Suggests optimal order to review changed files.
-
-Arguments:
-- `files` (optional): Specific files to analyze. If omitted, uses git diff.
-- `instructions` (optional): Custom ordering instructions
-- `impact_data` (optional): Impact analysis results to merge external files into the list
-
-Output:
-- Prioritized file list with rationale
-- Dependency graph showing import relationships
-- Scores based on: type priority, dependents count, complexity, external impact
-
-### `impact_analysis`
-
-Finds code outside the changeset that could break.
-
-Output:
-- Direct consumers (files that import changed code)
-- Transitive impact (files that use files that use changed code)
-- Test coverage gaps (changed files without tests)
 
 ## License
 
