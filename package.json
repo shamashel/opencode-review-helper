@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "opencode-review-helper": "./dist/cli.js"
+    "opencode-review-helper": "dist/cli.js"
   },
   "files": [
     "dist",
@@ -17,7 +17,10 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "release:patch": "npm version patch && git push && git push --tags && npm publish --access public",
+    "release:minor": "npm version minor && git push && git push --tags && npm publish --access public",
+    "release:major": "npm version major && git push && git push --tags && npm publish --access public"
   },
   "dependencies": {
     "@opencode-ai/plugin": "^1.0.209",
@@ -36,7 +39,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/shamashel/opencode-review-helper"
+    "url": "git+https://github.com/shamashel/opencode-review-helper.git"
   },
   "author": "shamashel",
   "license": "MIT",
