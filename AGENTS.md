@@ -12,7 +12,7 @@ To test the plugin locally:
    ]
    ```
 
-2. Run `yarn build` to compile changes
+2. Run `npm run build` to compile changes
 
 3. Use the `/review-order` command or run:
    ```bash
@@ -24,8 +24,8 @@ To test the plugin locally:
 ## Release Process
 
 1. **Test changes locally**
-   - Run `yarn build` to verify compilation
-   - Test manually in OpenCode using `/test-local` command
+   - Run `npm run build` to verify compilation
+   - Test manually in OpenCode using `/review-order` command
    - Run unit tests if available
 
 2. **Commit and push changes**
@@ -33,9 +33,9 @@ To test the plugin locally:
    - Push to the repository
 
 3. **Suggest release command**
-   - For bug fixes: `yarn release:patch`
-   - For new features: `yarn release:minor`
-   - For breaking changes: `yarn release:major`
+   - For bug fixes: `npm run release:patch`
+   - For new features: `npm run release:minor`
+   - For breaking changes: `npm run release:major`
 
 4. **Wait for human verification**
    - Do NOT run the release command automatically
