@@ -23,6 +23,7 @@ Restart opencode after setup to load the plugin. The plugin uses `@latest` so it
 
 **Direct Slash Command Use**
 
+Run the slash command:
 ```
 /review-order
 ```
@@ -36,8 +37,11 @@ Output is a unified table showing all files to review, with changed files first 
 
 **Agent Use**
 
+Tab twice to go to Review-Helper mode:
+<img width="1968" height="188" alt="image" src="https://github.com/user-attachments/assets/1a548c1a-b81d-4982-a2db-c2a1525a6d7a" />
+
+Enter your prompt:
 ```
-# Tab twice to go to Review-Helper mode
 Take a look at everything since the 0.2.0 release as if it were a single PR. Guide me through how to review it.
 ```
 
