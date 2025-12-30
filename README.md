@@ -21,34 +21,13 @@ Restart opencode after setup to load the plugin.
 
 ## Usage
 
-Once installed, the plugin provides two tools:
+The plugin provides a `review-helper:code-reviewer` agent that combines both tools. It:
 
-### `review_order`
+1. Runs `review_order` to determine file review sequence
+2. Runs `impact_analysis` to find affected external code
+3. Formats the tool outputs into a combined report
 
-Suggests optimal order to review changed files.
-
-```
-Use review_order to analyze the changed files
-```
-
-Output:
-- Prioritized file list with rationale
-- Dependency graph showing import relationships
-- Scores based on: type priority, dependents count, complexity
-
-### `impact_analysis`
-
-Finds code outside the changeset that could break.
-
-```
-Use impact_analysis on these files: ["src/models/user.ts", "src/api/auth.ts"]
-```
-
-Output:
-- Direct consumers (files that import changed code)
-- Transitive impact (files that use files that use changed code)
-- Test coverage gaps (changed files without tests)
-- Recommendations
+The agent does NOT make up its own recommendations or analysis—it only presents what the tools return. It also does NOT automatically run tests or apply fixes.
 
 ## Configuration
 
@@ -90,15 +69,27 @@ Create `~/.config/opencode/review-helper.json` or `.opencode/review-helper.json`
 | `impact_analysis.max_results_per_level` | Max results per category | `50` |
 | `impact_analysis.exclude_patterns` | Glob patterns to skip | Test files |
 
-## Agents
+## Tools
 
-The plugin includes a `review-helper:code-reviewer` agent that combines both tools. It:
+The plugin also exposes two tools directly:
 
-1. Runs `review_order` to determine file review sequence
-2. Runs `impact_analysis` to find affected external code
-3. Formats the tool outputs into a combined report
+### `review_order`
 
-The agent does NOT make up its own recommendations or analysis—it only presents what the tools return. It also does NOT automatically run tests or apply fixes.
+Suggests optimal order to review changed files.
+
+Output:
+- Prioritized file list with rationale
+- Dependency graph showing import relationships
+- Scores based on: type priority, dependents count, complexity
+
+### `impact_analysis`
+
+Finds code outside the changeset that could break.
+
+Output:
+- Direct consumers (files that import changed code)
+- Transitive impact (files that use files that use changed code)
+- Test coverage gaps (changed files without tests)
 
 ## License
 
